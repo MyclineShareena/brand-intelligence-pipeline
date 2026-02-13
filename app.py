@@ -56,7 +56,7 @@ st.markdown("""
 
 # Sidebar - About & Settings
 with st.sidebar:
-    st.image("https://via.placeholder.com/300x100/667eea/ffffff?text=Brand+Intelligence", use_container_width=True)
+    st.image("https://via.placeholder.com/300x100/667eea/ffffff?text=Brand+Intelligence", use_column_width=True)
     
     st.markdown("### 🎯 About This Tool")
     st.write("""
@@ -145,7 +145,8 @@ analyze_button = st.button("🚀 Analyze Feeds", type="primary", use_container_w
 def analyze_article(title, content, link, api_key):
     """Analyze a single article using GPT-4o-mini"""
     try:
-        client = openai.OpenAI(api_key=api_key)
+        from openai import OpenAI
+        client = OpenAI(api_key=api_key)
         
         prompt = f"""Analyze this article for brand intelligence:
 
