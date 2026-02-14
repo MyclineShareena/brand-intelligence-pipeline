@@ -8,6 +8,19 @@ AI-powered brand sentiment and archetype analyzer that processes RSS feeds throu
 **Institution:** Northeastern University  
 **Assignment:** Assignment 5 - Wrap Your Tool & Know Your Market
 
+## 🚀 Quick Start
+
+**Try it now - No installation required!**
+
+1. **Visit:** https://brand-intelligence-pipeline.streamlit.app
+2. **Select RSS feeds** from sidebar (Azure, OpenAI, Google AI, etc.)
+3. **Set article count** (5-50 per feed)
+4. **Click "Analyze Brand"**
+5. **Wait 1-3 minutes** for AI analysis
+6. **Explore results:** Sentiment metrics, archetypes, strategic insights
+
+**First-time users:** The app may take 30-60 seconds to wake up from Render free tier sleep.
+
 ## Features
 - ✅ **Multi-Feed Analysis:** Process 5 RSS feeds simultaneously (Azure, OpenAI, Google AI, Google Developers, Microsoft Dev)
 - ✅ **Dynamic Article Control:** Slider to customize articles per feed (5-50)
@@ -20,16 +33,19 @@ AI-powered brand sentiment and archetype analyzer that processes RSS feeds throu
 - ✅ **Cost Efficient:** ~$0.08 per 100 articles analyzed
 
 ## Live Demo
-**Deployment URL:** https://brand-intelligence-pipeline.streamlit.app/  
-**Note:** Cloud deployment requires n8n workflow hosted on a public server (see deployment section below)
+**Streamlit App:** https://brand-intelligence-pipeline.streamlit.app/  
+**n8n Workflow:** https://brand-intelligence-n8n.onrender.com  
+**Status:** ✅ Deployed to production (Render + Streamlit Cloud)
 
 ## Tech Stack
 - **Frontend:** Streamlit (Python web framework)
-- **Backend Workflow:** n8n (currently localhost:5678)
+- **Backend Workflow:** n8n (deployed on Render.com)
 - **Integration:** Webhook API (POST requests)
 - **AI Model:** OpenAI GPT-4o-mini
 - **Data Processing:** pandas, requests
-- **Deployment:** Streamlit Community Cloud (frontend only)
+- **Deployment:** 
+  - Streamlit Community Cloud (frontend)
+  - Render.com Free Tier (n8n backend)
 
 ## Architecture
 
@@ -45,17 +61,18 @@ Streamlit UI → n8n Webhook → RSS Feed Readers → OpenAI Analysis → Stream
 5. **Response:** n8n aggregates results and returns `[{data: [...]}]` to Streamlit
 6. **Visualization:** Streamlit displays metrics, charts, and detailed tables
 
-## Local Installation
+## Local Development (Optional)
 
 ### Prerequisites
 - **Python 3.9+** for Streamlit
-- **n8n self-hosted** (localhost:5678) with workflow imported
+- **n8n self-hosted** (localhost:5678) OR **Render deployment** (recommended)
 - **OpenAI API key** configured in n8n workflow
 
-### Setup Steps
+### Local Testing with Render n8n (Recommended)
 
-1. **Clone or download this folder**
+1. **Clone repository**
    ```bash
+   git clone https://github.com/YOUR_USERNAME/brand-intelligence-pipeline.git
    cd brand-intelligence-pipeline
    ```
 
@@ -64,99 +81,135 @@ Streamlit UI → n8n Webhook → RSS Feed Readers → OpenAI Analysis → Stream
    pip install -r requirements.txt
    ```
 
-3. **Import n8n workflow**
-   - Open n8n at http://localhost:5678
-   - Import `Johnpeterkennedy_Myclineshareena_A5_Workflow_Webhook.json`
-   - Add OpenAI API credentials in n8n
-   - Activate the workflow
-
-4. **Verify webhook URL**
-   - In n8n, click the Webhook node
-   - **Test URL should be:** `http://localhost:5678/webhook-test/brand-intelligence`
-   - Click "Listen for test event" to activate
-
-5. **Run Streamlit app**
+3. **Run Streamlit app**
    ```bash
    streamlit run app.py
    ```
+   App uses production Render webhook automatically
 
-6. **Analyze feeds!**
+4. **Test the app:**
+   - Open http://localhost:8501
    - Select RSS feeds from sidebar
    - Set article count (5-50)
    - Click "Analyze Brand"
    - Wait 1-3 minutes for results
 
-## Streamlit Cloud Deployment
+### Local Testing with Local n8n (Advanced)
 
-### ⚠️ Important Deployment Consideration
-The current app uses **localhost:5678** for the n8n webhook, which won't work when deployed to Streamlit Cloud. You have **two options**:
+If you want to run n8n locally instead of using Render:
 
-### Option 1: Deploy n8n to Cloud (Recommended for Production)
-
-**Deploy n8n workflow to a cloud service:**
-- **Render:** https://render.com (free tier available)
-- **Railway:** https://railway.app (free $5 credit)
-- **DigitalOcean:** https://www.digitalocean.com (cheapest $4/month droplet)
-- **n8n Cloud:** https://n8n.io/pricing ($20/month, easiest setup)
-
-**Steps:**
-1. Deploy n8n to chosen platform
-2. Get your public webhook URL (e.g., `https://your-n8n.onrender.com/webhook/brand-intelligence`)
-3. Update `app.py` line 149 with the new URL:
+1. **Change webhook URL in app.py** (line 149):
    ```python
-   n8n_webhook_url = "https://your-n8n.onrender.com/webhook/brand-intelligence"
+   # Comment out production URL
+   # n8n_webhook_url = "https://brand-intelligence-n8n.onrender.com/webhook/brand-intelligence"
+   
+   # Use local URL
+   n8n_webhook_url = "http://localhost:5678/webhook-test/brand-intelligence"
    ```
-4. Push to GitHub and deploy to Streamlit Cloud (see steps below)
 
-### Option 2: Local n8n + Streamlit Cloud (For Assignment Demo)
+2. **Start n8n locally:**
+   ```bash
+   npx n8n   # or: n8n start
+   ```
 
-**Use ngrok to tunnel localhost n8n:**
-1. Install ngrok: https://ngrok.com/download
-2. Run: `ngrok http 5678`
-3. Copy the forwarding URL (e.g., `https://abc123.ngrok.io`)
-4. Update `app.py` line 149:
+3. **Import workflow:**
+   - Open n8n at http://localhost:5678
+   - Import workflow JSON from Assignment_4_Final or Assignment_5_Final folder
+   - Add OpenAI API credentials in n8n
+   - Activate the workflow
+
+4. **Activate webhook:**
+   - In n8n, click the Webhook node
+   - Click "Listen for test event" to activate
+   - Test URL: `http://localhost:5678/webhook-test/brand-intelligence`
+
+5. **Run Streamlit:**
+   ```bash
+   streamlit run app.py
+   ```
+
+## Cloud Deployment (Complete Setup)
+
+### ✅ Current Deployment Status
+This project is **fully deployed to production**:
+- **n8n Workflow:** Running on Render.com (free tier)
+- **Streamlit App:** Running on Streamlit Cloud
+- **Webhook URL:** `https://brand-intelligence-n8n.onrender.com/webhook/brand-intelligence`
+
+### 📚 Deployment Guides
+
+**For detailed step-by-step instructions, see:**
+- **[RENDER_DEPLOYMENT_GUIDE.md](RENDER_DEPLOYMENT_GUIDE.md)** - Complete guide for deploying n8n to Render (15-20 minutes)
+
+### Quick Deploy Steps
+
+**1. Deploy n8n to Render (One-time setup):**
+   ```
+   1. Sign up at https://render.com (free)
+   2. New Web Service → Docker Image: n8nio/n8n:latest
+   3. Add environment variables (see RENDER_DEPLOYMENT_GUIDE.md)
+   4. Deploy and wait for "Live" status (5-10 minutes)
+   5. Import workflow JSON and activate
+   ```
+
+**2. Deploy Streamlit to Cloud:**
+   ```bash
+   # Already configured - webhook URL updated to Render
+   git push  # Code is already pushed
+   
+   # Then deploy:
+   # 1. Go to https://streamlit.io/cloud
+   # 2. Sign in with GitHub
+   # 3. Click "New app"
+   # 4. Select repository: brand-intelligence-pipeline
+   # 5. Main file: app.py
+   # 6. Click "Deploy"
+   ```
+
+**3. Test End-to-End:**
+   - Open: https://brand-intelligence-pipeline.streamlit.app
+   - Select RSS feeds
+   - Set slider to 5 articles
+   - Click "Analyze Brand"
+   - Wait 1-3 minutes for results
+
+### Alternative Deployment Options
+
+<details>
+<summary><b>Option 2: Local n8n + ngrok Tunnel</b> (For testing only)</summary>
+
+If you want to test without deploying n8n to cloud:
+
+1. **Install ngrok:** https://ngrok.com/download
+2. **Run ngrok:**
+   ```bash
+   ngrok http 5678
+   ```
+3. **Update app.py** with ngrok URL:
    ```python
    n8n_webhook_url = "https://abc123.ngrok.io/webhook-test/brand-intelligence"
    ```
-5. Deploy to Streamlit Cloud
-6. **Note:** ngrok URL changes on restart (not permanent solution)
+4. **Deploy to Streamlit Cloud**
 
-### Deploy Streamlit App to Cloud
+⚠️ **Note:** ngrok URL changes on restart - not suitable for production
 
-**1. Create GitHub Repository**
-   ```bash
-   git init
-   git add .
-   git commit -m "Brand Intelligence Pipeline"
-   git branch -M main
-   git remote add origin https://github.com/YOUR_USERNAME/brand-intelligence-pipeline.git
-   git push -u origin main
-   ```
+</details>
 
-**2. Deploy to Streamlit Cloud**
-   - Go to https://streamlit.io/cloud
-   - Sign in with GitHub
-   - Click "New app"
-   - Select repository: `brand-intelligence-pipeline`
-   - Main file: `app.py`
-   - Click "Deploy"
+<details>
+<summary><b>Option 3: Railway Deployment</b> (Alternative to Render)</summary>
 
-**3. Get Public URL**
-   - Your app will be live at: `https://brand-intelligence-pipeline.streamlit.app`
-   - Share this URL in your assignment submission
+If Render doesn't work:
 
-**4. (Optional) Environment Variables**
-   If you want to use environment variables for the webhook URL:
-   - In Streamlit Cloud dashboard → App Settings → Secrets
-   - Add:
-     ```toml
-     N8N_WEBHOOK_URL = "https://your-n8n-url.com/webhook/brand-intelligence"
-     ```
-   - Update `app.py`:
-     ```python
-     import os
-     n8n_webhook_url = os.getenv("N8N_WEBHOOK_URL", "http://localhost:5678/webhook-test/brand-intelligence")
-     ```
+1. **Go to:** https://railway.app
+2. **Sign up** with GitHub ($5 free credit)
+3. **New Project** → **Deploy from Docker Hub**
+4. **Image:** `n8nio/n8n:latest`
+5. **Variables:** Same as Render (see RENDER_DEPLOYMENT_GUIDE.md)
+6. **Domain:** Railway provides `https://your-service.up.railway.app`
+
+Railway doesn't spin down like Render but uses paid credits.
+
+</details>
 
 ## Usage Guide
 
@@ -280,71 +333,184 @@ This Streamlit interface wraps the **Assignment 4 Brand Intelligence Pipeline** 
 brand-intelligence-pipeline/
 ├── app.py                                    # Streamlit frontend (429 lines)
 ├── requirements.txt                          # Python dependencies
-├── README.md                                 # This deployment guide
-└── helper file/ get_max_articles_code.js                  # Debug code for n8n node
+├── README.md                                 # This comprehensive guide
+├── RENDER_DEPLOYMENT_GUIDE.md                # Step-by-step Render deployment
+├── .streamlit/                               # Streamlit configuration
+└── helper file/
+    └── get_max_articles_code.js              # Debug code for n8n node
 ```
+
+**n8n Workflow File:** Located in parent directory `Assignment_4_Final/` or `Assignment_5_Final/`
+- Filename: `Johnpeterkennedy_Myclineshareena_A4_Workflow.json` or similar
+- Import this into Render n8n instance
 
 ## Troubleshooting
 
 ### "Request timed out"
-- **Cause:** n8n workflow taking longer than 15 minutes (900s timeout)
-- **Solution:** Reduce article count slider to 5-10 per feed
+- **Cause:** n8n workflow taking longer than 15 minutes (900s timeout) OR Render cold start
+- **Solution:** 
+  - Reduce article count slider to 5-10 per feed
+  - Wait 60 seconds and retry (Render may be waking up from sleep)
 - **Note:** OpenAI API can be slow during peak hours
+
+### "Service Unavailable" or 503 Error (Render)
+- **Cause:** Render n8n spinning up from cold start (15min+ inactivity)
+- **Solution:** 
+  - Wait 30-60 seconds and try again
+  - Use UptimeRobot to keep n8n alive (see RENDER_DEPLOYMENT_GUIDE.md)
+  - First request after idle takes longer
 
 ### "n8n webhook returned error: 404"
 - **Cause:** n8n workflow not activated or webhook URL incorrect
 - **Solution:** 
-  1. Open n8n workflow
-  2. Click Webhook node → "Listen for test event"
-  3. Verify test URL is `http://localhost:5678/webhook-test/brand-intelligence`
-  4. Try Streamlit again
+  1. Open https://brand-intelligence-n8n.onrender.com
+  2. Login and verify workflow is ACTIVE (toggle switch green)
+  3. Check webhook node shows correct path: `/webhook/brand-intelligence`
+  4. Verify app.py uses production URL (not test URL)
+
+### "Unauthorized" or 401 Error (Render)
+- **Cause:** Basic auth blocking webhook requests
+- **Solution:** 
+  - In Render dashboard → Environment → Set `N8N_BASIC_AUTH_ACTIVE=false`
+  - OR access n8n UI at the URL and login to verify credentials
 
 ### "Error calling n8n webhook: Connection refused"
-- **Cause:** n8n is not running
-- **Solution:** Start n8n with `n8n start` or `npx n8n`
+- **Cause:** 
+  - (Render) Service is down or failed deployment
+  - (Local) n8n is not running
+- **Solution:** 
+  - (Render) Check Render dashboard - service should show "Live" status
+  - (Render) Check Render logs for errors
+  - (Local) Start n8n with `n8n start` or `npx n8n`
 
-### Slider set to 5 but getting 10 articles
-- **Cause:** n8n using cached webhook test event data
+### Slider set to 5 but getting 10 articles (n8n issue)
+- **Cause:** Limit nodes not reading max_articles from webhook payload
 - **Solution:**
-  1. n8n: Webhook node → "Listen for test event" (clears cache)
-  2. Streamlit: Set slider to 5 → "Analyze Brand"
-  3. n8n: "Execute workflow" button (full workflow, not individual nodes)
-  4. Verify "Get Max Articles" OUTPUT shows `{max_articles: 5}`
+  1. Login to Render n8n: https://brand-intelligence-n8n.onrender.com
+  2. Open workflow → Click each "Limit" node
+  3. Verify Max Items: `={{ $('Get Max Articles').item.json.max_articles }}`
+  4. If hardcoded to `10`, change to expression above
+  5. Save workflow and test again
 
 ### Limit nodes not working in n8n
 - **Cause:** Max Items field has hardcoded `10` instead of expression
 - **Solution:** Edit each Limit node:
   - Max Items: `={{ $('Get Max Articles').item.json.max_articles }}`
-  - Save and re-run workflow
+  - Save and re-activate workflow
 
-### Cloud deployment: localhost webhook doesn't work
-- **Cause:** Streamlit Cloud can't access localhost:5678
-- **Solutions:** 
-  - **Production:** Deploy n8n to Render/Railway/DigitalOcean, update webhook URL
-  - **Quick demo:** Use ngrok tunnel (`ngrok http 5678`)
-  - **Alternative:** Refactor to use OpenAI API directly in Streamlit (no n8n)
+### Slow performance (Render free tier)
+- **Expected:** Free tier has limited CPU/memory
+- **Solutions:**
+  - Reduce article count to 5-10 per feed
+  - Select fewer RSS feeds (2-3 instead of 5)
+  - Upgrade to Render paid tier ($7/month for better performance)
+
+### Workflow runs but returns empty results
+- **Cause:** OpenAI credentials missing or invalid
+- **Solution:**
+  1. Login to Render n8n
+  2. Go to Credentials menu
+  3. Verify OpenAI API key is saved
+  4. Test OpenAI node manually in workflow
+  5. Check Render logs for API errors
 
 ## Future Enhancements
-- [ ] **Cloud n8n Deployment:** Move from localhost to Render/Railway for production
+- [x] **Cloud n8n Deployment:** ✅ COMPLETED - Deployed to Render.com
+- [x] **Streamlit Cloud Deployment:** ✅ COMPLETED - Live at brand-intelligence-pipeline.streamlit.app
 - [ ] **Caching:** Store results in Redis/SQLite for faster repeated analysis
 - [ ] **Export Options:** Add JSON/CSV download buttons
 - [ ] **Historical Tracking:** Track sentiment trends over time (weekly/monthly)
 - [ ] **Competitor Comparison:** Side-by-side brand archetype analysis
 - [ ] **Email Reports:** Schedule weekly digest emails
 - [ ] **Real-time Updates:** WebSocket connection for live workflow progress
-- [ ] **Custom Feeds:** Allow users to add their own RSS feeds
+- [ ] **Custom Feeds:** Allow users to add their own RSS feeds via UI
 - [ ] **Multi-language:** Support non-English RSS feeds
 - [ ] **Advanced Filtering:** Filter by date range, sentiment, archetype
 
 ## Technical Specifications
 - **Python Version:** 3.9+
 - **Streamlit Version:** 1.31.0+
-- **n8n Version:** Self-hosted (2.6.3 or higher recommended)
+- **n8n Version:** Deployed on Render (v2.6.3+)
 - **OpenAI Model:** GPT-4o-mini
 - **Webhook Timeout:** 900 seconds (15 minutes)
 - **Default Article Count:** 10 per feed
 - **Max Article Count:** 50 per feed
 - **Average Processing Time:** 1-3 minutes for 50 articles
 - **Average Cost:** $0.0008 per article (~$0.08 per 100 articles)
+- **Deployment:** 
+  - Frontend: Streamlit Cloud (free tier)
+  - Backend: Render.com (free tier)
+  - Total Cost: $0/month
+
+## Production Deployment Status
+
+### ✅ Live URLs
+- **Streamlit App:** https://brand-intelligence-pipeline.streamlit.app
+- **n8n Workflow:** https://brand-intelligence-n8n.onrender.com
+- **Webhook Endpoint:** https://brand-intelligence-n8n.onrender.com/webhook/brand-intelligence
+
+### 🚀 Deployment Details
+- **Deployed:** February 14, 2026
+- **Status:** Production Ready
+- **Uptime:** Render free tier (spins down after 15min inactivity)
+- **Cold Start:** ~30-60 seconds on first request
+- **Keep-Alive:** Optional via UptimeRobot (see RENDER_DEPLOYMENT_GUIDE.md)
+
+### 📊 Performance Metrics
+- **Concurrent Users:** Unlimited (Streamlit Cloud)
+- **Analysis Speed:** 1-3 minutes for 50 articles (5 feeds × 10 articles)
+- **Rate Limits:** Depends on OpenAI API tier
+- **Storage:** None (stateless analysis)
+
+## Credits & Attribution
+- **Built by:** MyclineShareena John Peter Kennedy
+- **Student ID:** [Your Northeastern ID]
+- **Course:** INFO7375 - Branding & AI (Spring 2026)
+- **Professor:** [Professor Name]
+- **Institution:** Northeastern University
+- **Assignment:** Assignment 5 - Wrap Your Tool & Know Your Market
+- **Framework:** Madison Brand Intelligence Framework
+- **Technologies:** n8n (Workflow Automation), Streamlit (Frontend), OpenAI GPT-4o-mini (AI)
+- **Deployment:** Render.com (n8n), Streamlit Cloud (Frontend)
+
+## Contact & Links
+- **Email:** mycline.s@northeastern.edu
+- **GitHub Repository:** https://github.com/YOUR_USERNAME/brand-intelligence-pipeline
+- **LinkedIn:** [Your LinkedIn Profile]
+- **Live Demo:** https://brand-intelligence-pipeline.streamlit.app
+
+## Assignment 5 Submission Checklist
+- [x] Streamlit app created with webhook integration
+- [x] n8n workflow with dynamic article control (slider)
+- [x] README with comprehensive deployment instructions
+- [x] requirements.txt with all dependencies
+- [x] ✅ **Deployed to Streamlit Cloud** (https://brand-intelligence-pipeline.streamlit.app)
+- [x] ✅ **n8n deployed to Render** (https://brand-intelligence-n8n.onrender.com)
+- [x] RENDER_DEPLOYMENT_GUIDE.md with step-by-step instructions
+- [ ] Test with 3 users (document in Assignment 5 submission doc)
+- [ ] Competitor analysis completed (Brand24, Crayon, Feedly AI)
+- [ ] Trademark research completed ("Brand Intelligence")
+- [ ] Positioning matrix created (2x2 grid)
+- [ ] Submit PDF by February 14, 2026 at 11:59 PM
+
+## License
+Educational project - Northeastern University © 2026  
+For academic use only. Not for commercial distribution.
+
+---
+
+**Last Updated:** February 14, 2026  
+**Version:** 2.0.0 (Production Deployment - Render + Streamlit Cloud)  
+**Status:** ✅ **LIVE IN PRODUCTION**
+
+**Quick Links:**
+- 🌐 [Live App](https://brand-intelligence-pipeline.streamlit.app)
+- 🔧 [n8n Workflow](https://brand-intelligence-n8n.onrender.com)
+- 📚 [Deployment Guide](RENDER_DEPLOYMENT_GUIDE.md)
+- 📖 [Assignment 5 Doc](../Assignment_5_Final/)
+
+---
+
+*Built with ❤️ for INFO7375 - Branding & AI at Northeastern University*
 
 
