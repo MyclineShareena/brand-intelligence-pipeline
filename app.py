@@ -423,6 +423,6 @@ st.markdown("""
 <div class="footer">
     <p><strong>Brand Intelligence Pipeline</strong> - AI-Powered Competitive Analysis</p>
     <p>Built with Streamlit + n8n + OpenAI GPT-4o-mini | Assignment 5 - INFO7375 Branding & AI</p>
-    <p>Shareena Mycline | Northeastern University | Spring 2026</p>
+    <p>MyclineShareena | Northeastern University | Spring 2026</p>
 </div>
 """, unsafe_allow_html=True)
